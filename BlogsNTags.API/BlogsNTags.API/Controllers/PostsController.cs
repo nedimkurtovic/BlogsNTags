@@ -22,12 +22,12 @@ namespace BlogsNTags.API.Controllers
             blogService = _blogService;
         }
 
-
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<List<Blog>> GetBlogs([FromQuery]BlogSearchRequest obj)
+        public async Task< ActionResult<List<Blog>>> GetBlogs([FromQuery]BlogSearchRequest obj)
         {
-            throw new NotImplementedException();
+            var result = await blogService.GetBlogsAsync(obj);
+            return Ok(result);
         }
 
         [HttpGet("{slug}")]

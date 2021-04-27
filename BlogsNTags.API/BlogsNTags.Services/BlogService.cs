@@ -85,7 +85,29 @@ namespace BlogsNTags.Services
 
         public async Task<List<Blog>> GetBlogsAsync(BlogSearchRequest obj)
         {
-            throw new NotImplementedException();
+            var blogsQueryable= db.Blogs
+                .AsNoTracking()
+                .Include(x=>x.BlogsTags)
+                    .ThenInclude(x=>x.Tag)
+                .OrderByDescending(x=>x.CreatedAt)
+                .AsQueryable();
+            if (obj.Tag != null && !String.IsNullOrEmpty(obj.Tag))
+                blogsQueryable = blogsQueryable.Where(x => x.BlogsTags.Select(c => c.Tag.Name).Contains(obj.Tag));
+            
+            var listOfBlogs = await blogsQueryable.ToListAsync();
+            
+            var returnObjectBlogs = new List<Blog>();
+            foreach(var dbBlog in listOfBlogs)
+            {
+                var ConvertedBlog = mapper.Map<Blog>(dbBlog);
+                foreach (var BlogsTags in dbBlog.BlogsTags)
+                    ConvertedBlog.TagList.Add(mapper.Map<SharedModels.Tag>(BlogsTags.Tag));
+
+                returnObjectBlogs.Add(ConvertedBlog);
+            }
+
+            return returnObjectBlogs;
+            
         }
 
         public async Task<Blog> UpdateBlogAsync(string Slug, BlogUpdateRequest obj)
