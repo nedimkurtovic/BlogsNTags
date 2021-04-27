@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using BlogsNTags.Services;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -27,10 +29,16 @@ namespace BlogsNTags.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            
             services.AddControllers(opt=> {
                 opt.Filters.Add(new ProducesAttribute("application/json"));
             });
+
+            services.AddAutoMapper(typeof(Services.Mappings.BlogsProfile));
+            services.AddAutoMapper(typeof(Services.Mappings.TagsProfile));
+
+            services.AddScoped<Services.Interfaces.IBlogService, Services.BlogService>();
+            services.AddScoped<Services.Interfaces.ITagService, Services.TagService>();
 
             services.AddDbContext<MyDbContext>(options =>
             {
