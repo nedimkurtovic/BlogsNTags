@@ -54,9 +54,12 @@ namespace BlogsNTags.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Blog> CreateBlog(string slug, [FromBody] BlogUpdateRequest obj)
+        public async Task<ActionResult<Blog>> UpdateBlog(string slug, [FromBody] BlogUpdateRequest obj)
         {
-            throw new NotImplementedException();
+            var result = await blogService.UpdateBlogAsync(slug, obj);
+            if (result == default(SharedModels.Blog))
+                return NotFound();
+            return Ok(result);
         }
 
         [HttpDelete("{slug}")]

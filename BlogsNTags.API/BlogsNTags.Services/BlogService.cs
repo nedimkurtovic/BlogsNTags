@@ -25,7 +25,7 @@ namespace BlogsNTags.Services
         }
         public async Task<Blog> AddBlogAsync(BlogCreateRequest obj)
         {
-            await ValidateAdd(obj);
+            ValidateAdd(obj);
             var slug = CreateUniqueSlug(obj.Title);
             var newblog = mapper.Map<Database.Models.Blog>(obj);
             newblog.Slug = slug;
@@ -67,11 +67,7 @@ namespace BlogsNTags.Services
 
         public async Task<Blog> GetBlogAsync(string Slug)
         {
-            var result = await db.Blogs
-                .AsNoTracking()
-                .Include(x=>x.BlogsTags)
-                    .ThenInclude(x=>x.Tag)
-                .Where(x => x.Slug == Slug).FirstOrDefaultAsync();
+            var result = await GetDatabaseBlogBySlug(Slug);  
             if (result == default(Database.Models.Blog))
                 return default(SharedModels.Blog);
 
@@ -112,21 +108,63 @@ namespace BlogsNTags.Services
 
         public async Task<Blog> UpdateBlogAsync(string Slug, BlogUpdateRequest obj)
         {
-            throw new NotImplementedException();
+            ValidateUpdate(obj);
+            
+            var databaseBlog = await GetDatabaseBlogBySlug(Slug);
+            if (databaseBlog == default(Database.Models.Blog))
+                return default(SharedModels.Blog);
+
+            if (obj.Title != null)
+            {
+                databaseBlog.Title = obj.Title;
+                var newSlug = CreateUniqueSlug(obj.Title);
+                databaseBlog.Slug = newSlug;
+            }
+
+            if (obj.Description != null)
+                databaseBlog.Description = obj.Description;
+            if (obj.Body != null)
+                databaseBlog.Body = obj.Body;
+
+            db.Blogs.Update(databaseBlog);
+            db.SaveChanges();
+
+            return MapBlogWithTags(databaseBlog);
         }
 
         #region Validacija
         
-        private async Task<bool> ValidateAdd(BlogCreateRequest obj)
+        private bool ValidateAdd(BlogCreateRequest obj)
         {
+            //for now its true, any further validation rules can be added here
             return true;
         }
 
-
+        private bool ValidateUpdate(BlogUpdateRequest obj)
+        {
+            //for now its true, any further validation rules can be added here
+            return true;
+        }
 
         #endregion
 
         #region Helpers
+        private SharedModels.Blog MapBlogWithTags(Database.Models.Blog obj)
+        {
+            var ReturnObject = mapper.Map<SharedModels.Blog>(obj);
+            foreach (var tag in obj.BlogsTags)
+                ReturnObject.TagList.Add(mapper.Map<SharedModels.Tag>(tag.Tag));
+            return ReturnObject;
+        }
+        private async Task<Database.Models.Blog> GetDatabaseBlogBySlug(string Slug)
+        {
+            return await db.Blogs
+               .AsNoTracking()
+               .Include(x => x.BlogsTags)
+                   .ThenInclude(x => x.Tag)
+               .Where(x => x.Slug == Slug).FirstOrDefaultAsync();
+            
+        }
         private string CreateUniqueSlug(string Title)
         {
             var pattern = @"[àáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìłḿñńǹňôöòóœøōõőṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż·_,:;]";
