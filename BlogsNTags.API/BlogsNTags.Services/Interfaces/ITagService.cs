@@ -8,6 +8,6 @@ namespace BlogsNTags.Services.Interfaces
 {
     public interface ITagService
     {
-        Task<List<BlogsNTags.SharedModels.Tag>> GetTagsAsync();
+        List<BlogsNTags.SharedModels.Tag> GetTags();
     }
 }

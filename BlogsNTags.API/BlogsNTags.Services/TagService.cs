@@ -1,4 +1,6 @@
-﻿using BlogsNTags.Services.Interfaces;
+﻿using AutoMapper;
+using BlogsNTags.Database;
+using BlogsNTags.Services.Interfaces;
 using BlogsNTags.SharedModels;
 using System;
 using System.Collections.Generic;
@@ -10,9 +12,18 @@ namespace BlogsNTags.Services
 {
     public class TagService : ITagService
     {
-        public async Task<List<Tag>> GetTagsAsync()
+        private readonly MyDbContext db;
+        private readonly IMapper mapper;
+
+        public TagService(MyDbContext _db, IMapper _mapper)
         {
-            throw new NotImplementedException();
+            db = _db;
+            mapper = _mapper;
+        }
+        public List<Tag> GetTags()
+        {
+            var TagList = db.Tags.ToList();
+            return mapper.Map<List<SharedModels.Tag>>(TagList);
         }
     }
 }

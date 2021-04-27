@@ -19,9 +19,11 @@ namespace BlogsNTags.API.Controllers
             tagService = _tagService;
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<List<SharedModels.Tag>> GetTags()
         {
-            throw new NotImplementedException();
+            var result = tagService.GetTags();
+            return Ok(result);
         }
     }
 }
