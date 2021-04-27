@@ -52,11 +52,7 @@ namespace BlogsNTags.Services
             }
                     
             await db.SaveChangesAsync();
-            var ReturnObject = mapper.Map<SharedModels.Blog>(newblog);
-            foreach(var tag in newblog.BlogsTags)
-                ReturnObject.TagList.Add(mapper.Map<SharedModels.Tag>(tag.Tag));
-
-            return ReturnObject;
+            return MapBlogWithTags(newblog);
 
         }
 
@@ -71,12 +67,7 @@ namespace BlogsNTags.Services
             if (result == default(Database.Models.Blog))
                 return default(SharedModels.Blog);
 
-            var returnObject = mapper.Map<Blog>(result);
-            foreach (var i in result.BlogsTags)
-                returnObject.TagList.Add(mapper.Map<SharedModels.Tag>(i.Tag));
-
-            return returnObject;
-            
+            return MapBlogWithTags(result);      
         }
 
         public async Task<List<Blog>> GetBlogsAsync(BlogSearchRequest obj)
@@ -95,10 +86,7 @@ namespace BlogsNTags.Services
             var returnObjectBlogs = new List<Blog>();
             foreach(var dbBlog in listOfBlogs)
             {
-                var ConvertedBlog = mapper.Map<Blog>(dbBlog);
-                foreach (var BlogsTags in dbBlog.BlogsTags)
-                    ConvertedBlog.TagList.Add(mapper.Map<SharedModels.Tag>(BlogsTags.Tag));
-
+                var ConvertedBlog = MapBlogWithTags(dbBlog);
                 returnObjectBlogs.Add(ConvertedBlog);
             }
 
