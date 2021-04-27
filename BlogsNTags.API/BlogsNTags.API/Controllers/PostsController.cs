@@ -33,9 +33,12 @@ namespace BlogsNTags.API.Controllers
         [HttpGet("{slug}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Blog> GetBlog(string slug)
+        public async Task<ActionResult<Blog>> GetBlog(string slug)
         {
-            throw new NotImplementedException();
+            var result = await blogService.GetBlogAsync(slug);
+            if (result == default(Blog))
+                return NotFound();
+            return Ok(result);
         }
 
         [HttpPost]

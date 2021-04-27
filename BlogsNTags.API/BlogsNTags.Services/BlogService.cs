@@ -67,7 +67,20 @@ namespace BlogsNTags.Services
 
         public async Task<Blog> GetBlogAsync(string Slug)
         {
-            throw new NotImplementedException();
+            var result = await db.Blogs
+                .AsNoTracking()
+                .Include(x=>x.BlogsTags)
+                    .ThenInclude(x=>x.Tag)
+                .Where(x => x.Slug == Slug).FirstOrDefaultAsync();
+            if (result == default(Database.Models.Blog))
+                return default(SharedModels.Blog);
+
+            var returnObject = mapper.Map<Blog>(result);
+            foreach (var i in result.BlogsTags)
+                returnObject.TagList.Add(mapper.Map<SharedModels.Tag>(i.Tag));
+
+            return returnObject;
+            
         }
 
         public async Task<List<Blog>> GetBlogsAsync(BlogSearchRequest obj)
