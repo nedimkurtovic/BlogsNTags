@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BlogsNTags.SharedModels
 {
-    public class Tag:BaseEntity
+    public class BaseEntity
     {
-        public string Name { get; set; } = String.Empty;
-
+        public string CreatedAt { get; set; } = String.Empty;
+        public string UpdatedAt { get; set; } = String.Empty;
     }
 }

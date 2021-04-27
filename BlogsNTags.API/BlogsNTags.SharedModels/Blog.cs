@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace BlogsNTags.SharedModels
 {
-    public class Blog
+    public class Blog:BaseEntity
     {
-        public string Slug { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string Body { get; set; }
-        public List<Tag> TagList { get; set; }
+        public string Slug { get; set; } = String.Empty;
+        public string Title { get; set; } = String.Empty;
+        public string Description { get; set; } = String.Empty;
+        public string Body { get; set; } = String.Empty;
+
+        public List<Tag> TagList { get; set; } = new List<Tag>();
+        
     }
 }
