@@ -17,6 +17,6 @@ namespace BlogsNTags.Database.Models
         public string Description { get; set; }
         [Required]
         public string Body { get; set; }
-        public IList<BlogsTags> BlogsTags { get; set; }
+        public IList<BlogsTags> BlogsTags { get; set; } = new List<BlogsTags>();
     }
 }

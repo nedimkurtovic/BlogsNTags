@@ -10,9 +10,7 @@ namespace BlogsNTags.Database.Models
     public class Tag: BaseObject
     {
         [Required]
-        public string Slug { get; set; }
-        [Required]
         public string Name { get; set; }
-        public IList<BlogsTags> BlogsTags{ get; set; }
+        public IList<BlogsTags> BlogsTags{ get; set; } = new List<BlogsTags>();
     }
 }
