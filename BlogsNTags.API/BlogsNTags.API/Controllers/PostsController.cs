@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using BlogsNTags.SharedModels.Requests.Blogs;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace BlogsNTags.API.Controllers
 {
@@ -40,9 +41,10 @@ namespace BlogsNTags.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Blog> CreateBlog([FromBody] BlogCreateRequest obj)
+        public async Task<ActionResult<Blog>> CreateBlog([FromBody] BlogCreateRequest obj)
         {
-            throw new NotImplementedException();
+            var result = await blogService.AddBlogAsync(obj);
+            return CreatedAtAction(nameof(GetBlog),new { slug=result.Slug }, result);
         }
         
         [HttpPut("{slug}")]
