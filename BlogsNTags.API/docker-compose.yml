@@ -5,10 +5,10 @@ services:
     restart: unless-stopped
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=blogsntagsapi.!.
+      - SA_PASSWORD=Blogsntagsapi!23
       - MSSQL_PID=Developer
     ports:
-      - 1401:1433
+      - 3000:1433
     networks:
       - blogsntagsnet
 
@@ -18,10 +18,11 @@ services:
       context: .
       dockerfile: BlogsNTags.API/Dockerfile 
     environment: 
+      - TZ=Europe/Sarajevo
       - ASPNETCORE_URLS=https://+:44313;http://+:9785
       - ASPNETCORE_Kestrel__Certificates__Default__Password=blogsntags
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/blogsntags.pfx
-      - ConnectionStrings:main=Server=blogsntags-sql;Database=blogs_and_tags;Trusted_Connection=False;MultipleActiveResultSets=True;User ID=sa;Password=blogsntagsapi.!.;ConnectRetryCount=200
+      - ConnectionStrings:main=Server=blogsntags-sql;Database=blogsandtags;Trusted_Connection=False;MultipleActiveResultSets=True;User ID=sa;Password=Blogsntagsapi!23;ConnectRetryCount=200
     volumes:
       - ./BlogsNTags.API:/https:ro
     ports:

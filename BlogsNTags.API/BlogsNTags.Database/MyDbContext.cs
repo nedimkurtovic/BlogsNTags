@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BlogsNTags.Database
 {
-    public class MyDbContext: DbContext
+    public partial class MyDbContext: DbContext
     {
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<Tag> Tags{ get; set; }
@@ -32,6 +32,8 @@ namespace BlogsNTags.Database
                 .HasOne<Tag>(x => x.Tag)
                 .WithMany(x => x.BlogsTags)
                 .HasForeignKey(x => x.TagId);
+
+            OnModelCreatingPartial(modelBuilder);
         }
         public override int SaveChanges()
         {
@@ -50,5 +52,6 @@ namespace BlogsNTags.Database
 
             return base.SaveChanges();
         }
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

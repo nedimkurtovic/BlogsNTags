@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BlogsNTags.API
@@ -15,11 +16,10 @@ namespace BlogsNTags.API
     {
         public static void Main(string[] args)
         {
-            //CreateHostBuilder(args).Build().Run();
             var host = CreateHostBuilder(args).Build();
             using (var scope = host.Services.CreateScope())
             {
-                var servis = scope.ServiceProvider.GetRequiredService<BlogsNTags.Database.MyDbContext>();
+                var servis = scope.ServiceProvider.GetRequiredService<BlogsNTags.Database.MyDbContext>();           
                 servis.Database.Migrate();
             }
             host.Run();
