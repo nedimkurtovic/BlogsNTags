@@ -58,7 +58,15 @@ namespace BlogsNTags.Services
 
         public async Task<Blog> DeleteBlogAsync(string Slug)
         {
-            throw new NotImplementedException();
+            var dbObject = await GetDatabaseBlogBySlug(Slug);
+            if (dbObject == default(Database.Models.Blog))
+                return default(SharedModels.Blog);
+
+            var returnObject = MapBlogWithTags(dbObject);
+            db.Blogs.Remove(dbObject);
+            await db.SaveChangesAsync();
+
+            return returnObject;
         }
 
         public async Task<Blog> GetBlogAsync(string Slug)

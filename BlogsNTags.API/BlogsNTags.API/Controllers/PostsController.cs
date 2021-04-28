@@ -66,9 +66,12 @@ namespace BlogsNTags.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Blog> DeleteBlog(string slug)
+        public async Task<ActionResult<Blog>> DeleteBlog(string slug)
         {
-            throw new NotImplementedException();
+            var result = await blogService.DeleteBlogAsync(slug);
+            if (result == default(SharedModels.Blog))
+                return NotFound();
+            return Ok(result);
         }
     }
 }
