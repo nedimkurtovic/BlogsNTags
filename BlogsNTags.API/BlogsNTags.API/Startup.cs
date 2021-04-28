@@ -36,6 +36,7 @@ namespace BlogsNTags.API
 
             services.AddControllers(opt=> {
                 opt.Filters.Add(new ProducesAttribute("application/json"));
+                opt.Filters.Add<Filters.GlobalExceptionFilter>();
             });
             services.AddSwaggerGen();
             services.AddAutoMapper(typeof(Services.Mappings.BlogsProfile));
