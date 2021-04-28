@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  blogsntags-sql:
+    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=blogsntagsapi.!.
+      - MSSQL_PID=Developer
+    ports:
+      - 1401:1433
+    networks:
+      - blogsntagsnet
+
+  blogsntags-api:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: BlogsNTags.API/Dockerfile 
+    environment: 
+      - ASPNETCORE_URLS=https://+:44313;http://+:9785
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=blogsntags
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/blogsntags.pfx
+      - ConnectionStrings:main=Server=blogsntags-sql;Database=blogs_and_tags;Trusted_Connection=False;MultipleActiveResultSets=True;User ID=sa;Password=blogsntagsapi.!.;ConnectRetryCount=200
+    volumes:
+      - ./BlogsNTags.API:/https:ro
+    ports:
+      - 9785:9785
+      - 44313:44313
+    networks:
+      - blogsntagsnet      
+    links:
+      - blogsntags-sql
+    depends_on:
+      - blogsntags-sql
+
+networks:
+  blogsntagsnet:
+    driver: bridge      
