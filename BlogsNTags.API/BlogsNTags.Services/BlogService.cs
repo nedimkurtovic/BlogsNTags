@@ -25,7 +25,7 @@ namespace BlogsNTags.Services
         }
         public async Task<Blog> AddBlogAsync(BlogCreateRequest obj)
         {
-            ValidateAdd(obj);
+            //ValidateAdd(obj); when business logic arises, call method to validate
             var slug = CreateUniqueSlug(obj.Title);
             var newblog = mapper.Map<Database.Models.Blog>(obj);
             newblog.Slug = slug;
@@ -104,8 +104,8 @@ namespace BlogsNTags.Services
 
         public async Task<Blog> UpdateBlogAsync(string Slug, BlogUpdateRequest obj)
         {
-            ValidateUpdate(obj);
-            
+            //ValidateUpdate(obj); when business logic arises, call method to validate
+
             var databaseBlog = await GetDatabaseBlogBySlug(Slug);
             if (databaseBlog == default(Database.Models.Blog))
                 return default(SharedModels.Blog);
@@ -130,17 +130,17 @@ namespace BlogsNTags.Services
 
         #region Validacija
         
-        private bool ValidateAdd(BlogCreateRequest obj)
-        {
-            //for now its true, any further validation rules can be added here
-            return true;
-        }
+        //private bool ValidateAdd(BlogCreateRequest obj)
+        //{
+        //    //for now its true, any further validation rules can be added here
+        //    return true;
+        //}
 
-        private bool ValidateUpdate(BlogUpdateRequest obj)
-        {
-            //for now its true, any further validation rules can be added here
-            return true;
-        }
+        //private bool ValidateUpdate(BlogUpdateRequest obj)
+        //{
+        //    //for now its true, any further validation rules can be added here
+        //    return true;
+        //}
 
         #endregion
 
