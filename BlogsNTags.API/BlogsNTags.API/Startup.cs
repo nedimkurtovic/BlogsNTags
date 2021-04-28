@@ -29,11 +29,15 @@ namespace BlogsNTags.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+            services.AddRouting(opt =>
+            {
+                opt.LowercaseUrls = true;
+            });
+
             services.AddControllers(opt=> {
                 opt.Filters.Add(new ProducesAttribute("application/json"));
             });
-
+            services.AddSwaggerGen();
             services.AddAutoMapper(typeof(Services.Mappings.BlogsProfile));
             services.AddAutoMapper(typeof(Services.Mappings.TagsProfile));
 
@@ -53,6 +57,12 @@ namespace BlogsNTags.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseSwagger();
+            app.UseSwaggerUI(opt =>
+            {
+                opt.SwaggerEndpoint("/swagger/v1/swagger.json", "My BlogsNTags API V1");
+                opt.RoutePrefix = String.Empty;
+            });
 
             app.UseHttpsRedirection();
 

@@ -18,7 +18,7 @@ namespace BlogsNTags.API.Controllers
         {
             tagService = _tagService;
         }
-
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<List<SharedModels.Tag>> GetTags()
         {
